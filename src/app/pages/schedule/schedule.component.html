@@ -1,0 +1,100 @@
+<div class="schedule-page">
+  <div class="page-header">
+    <h1 class="page-title">📅 Cronograma</h1>
+    <p class="page-subtitle">Días y horarios de recolección por barrio</p>
+  </div>
+
+  <!-- Today Banner -->
+  <div class="today-banner">
+    <div class="today-info">
+      <span class="today-icon">📆</span>
+      <div>
+        <div class="today-label">Hoy es</div>
+        <div class="today-day">{{ diaHoy }}</div>
+      </div>
+    </div>
+    <div class="today-count">
+      {{ barrios | countHoy:diaHoy }} barrios con recolección hoy
+    </div>
+  </div>
+
+  <!-- Calendar Grid -->
+  <div class="calendar-section">
+    <h2 class="section-title">Vista semanal por barrio</h2>
+    <div class="calendar-scroll">
+      <table class="calendar-table">
+        <thead>
+          <tr>
+            <th class="barrio-col">Barrio</th>
+            <th *ngFor="let dia of dias" [class.hoy]="dia === diaHoy">
+              <span class="dia-short">{{ dia.slice(0,3) }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let barrio of barrios" [class.activo-hoy]="tieneRecoleccionHoy(barrio)">
+            <td class="barrio-name">
+              <div class="barrio-label">{{ barrio.nombre }}</div>
+              <div class="barrio-hora">⏰ {{ barrio.horarioRecoleccion }}</div>
+            </td>
+            <td *ngFor="let dia of dias" [class.hoy]="dia === diaHoy">
+              <span
+                class="cell-mark"
+                [class.tiene]="barrio.diasRecoleccion.includes(dia)"
+                [title]="barrio.diasRecoleccion.includes(dia) ? 'Recolección ' + dia : ''"
+              >
+                {{ barrio.diasRecoleccion.includes(dia) ? '♻️' : '·' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Barrio Cards -->
+  <div class="barrios-section">
+    <h2 class="section-title">Detalle por barrio</h2>
+    <div class="barrios-grid">
+      <div
+        class="barrio-card"
+        *ngFor="let barrio of barrios"
+        [class.hoy-activo]="tieneRecoleccionHoy(barrio)"
+      >
+        <div class="barrio-card-header">
+          <h3>{{ barrio.nombre }}</h3>
+          <span class="hoy-pill" *ngIf="tieneRecoleccionHoy(barrio)">Hoy ♻️</span>
+        </div>
+
+        <div class="barrio-dias">
+          <span
+            class="dia-chip"
+            *ngFor="let dia of dias"
+            [class.activo]="barrio.diasRecoleccion.includes(dia)"
+            [class.hoy-chip]="dia === diaHoy && barrio.diasRecoleccion.includes(dia)"
+          >
+            {{ dia.slice(0,3) }}
+          </span>
+        </div>
+
+        <div class="barrio-horario">
+          ⏰ {{ barrio.horarioRecoleccion }}
+        </div>
+
+        <div class="barrio-desc" *ngIf="barrio.descripcion">
+          {{ barrio.descripcion }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notice -->
+  <div class="notice-card">
+    <div class="notice-icon">ℹ️</div>
+    <div>
+      <strong>Importante:</strong> Los días y horarios pueden variar en feriados. 
+      Para más información contactá a la Municipalidad de Corrientes al 
+      <strong>0800-222-VERDE</strong> o visitá la oficina de Ambiente.
+    </div>
+  </div>
+</div>

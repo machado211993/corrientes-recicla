@@ -1,0 +1,126 @@
+<div class="map-page">
+  <div class="page-header">
+    <h1 class="page-title">📍 Puntos Verdes</h1>
+    <p class="page-subtitle">Todos los centros de reciclaje de Corrientes Capital</p>
+  </div>
+
+  <!-- Location Status Bar -->
+  <div class="location-bar" *ngIf="buscandoUbicacion">
+    <div class="loc-spinner"></div>
+    <span>Detectando tu ubicación para ordenar por distancia...</span>
+  </div>
+
+  <div class="location-bar success" *ngIf="userLocation && !buscandoUbicacion">
+    <span class="loc-dot"></span>
+    <span>Ubicación obtenida · Lista ordenada por cercanía</span>
+  </div>
+
+  <div class="location-bar warning" *ngIf="!userLocation && !buscandoUbicacion">
+    <span>⚠️</span>
+    <span>Sin ubicación · Habilitá el GPS para ordenar por distancia</span>
+    <button class="btn-retry" (click)="obtenerUbicacion()">Reintentar</button>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <button class="filter-btn" [class.active]="filtroActivo === 'todos'" (click)="filtroActivo = 'todos'">
+      Todos ({{ puntos.length }})
+    </button>
+    <button class="filter-btn" [class.active]="filtroActivo === 'activo'" (click)="filtroActivo = 'activo'">
+      ✅ Activos
+    </button>
+    <button class="filter-btn" [class.active]="filtroActivo === 'cerrado'" (click)="filtroActivo = 'cerrado'">
+      🔴 Cerrados
+    </button>
+    <button class="btn-maps-ext" (click)="abrirMapaCompleto()">
+      🗺️ Ver en Google Maps
+    </button>
+  </div>
+
+  <!-- Puntos List -->
+  <div class="puntos-list">
+    <div
+      class="punto-card"
+      *ngFor="let punto of puntosFiltrados; let i = index"
+      [class.selected]="puntoSeleccionado?.id === punto.id"
+      [class.cerrado]="punto.estado === 'cerrado'"
+      (click)="seleccionarPunto(punto)"
+    >
+      <div class="card-main">
+        <!-- Rank / Distance -->
+        <div class="card-rank">
+          <span class="rank-num" *ngIf="userLocation">{{ i + 1 }}</span>
+          <span class="rank-icon" *ngIf="!userLocation">📍</span>
+        </div>
+
+        <!-- Info -->
+        <div class="card-info">
+          <div class="card-header-row">
+            <h3 class="card-nombre">{{ punto.nombre }}</h3>
+            <div class="card-badges">
+              <span class="dist-badge" *ngIf="punto.distancia">
+                {{ formatearDistancia(punto.distancia) }}
+              </span>
+              <span class="estado-badge" [class]="punto.estado">
+                {{ getEstadoLabel(punto.estado) }}
+              </span>
+            </div>
+          </div>
+
+          <p class="card-direccion">{{ punto.direccion }} · {{ punto.barrio }}</p>
+          
+          <div class="card-quick" *ngIf="punto.estado !== 'cerrado'">
+            <span class="quick-item">⏰ {{ punto.horario }}</span>
+            <span class="quick-item" *ngIf="punto.dias.length">📅 {{ punto.dias.slice(0,3).join(', ') }}{{ punto.dias.length > 3 ? '...' : '' }}</span>
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="card-arrow" [class.rotated]="puntoSeleccionado?.id === punto.id">›</div>
+      </div>
+
+      <!-- Expanded Detail -->
+      <div class="card-detail" *ngIf="puntoSeleccionado?.id === punto.id">
+        <div class="detail-divider"></div>
+
+        <div *ngIf="punto.estado === 'cerrado'" class="closed-notice">
+          🔴 Este punto verde está cerrado permanentemente
+        </div>
+
+        <div *ngIf="punto.estado !== 'cerrado'">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Horario de atención</span>
+              <span class="detail-value">{{ punto.horario }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Días de atención</span>
+              <span class="detail-value">{{ punto.dias.join(', ') }}</span>
+            </div>
+          </div>
+
+          <div class="detail-materiales">
+            <span class="detail-label">Materiales aceptados</span>
+            <div class="chips">
+              <span class="chip" *ngFor="let m of punto.materiales">
+                {{ getMaterialIcon(m) }} {{ m }}
+              </span>
+            </div>
+          </div>
+
+          <div class="observacion" *ngIf="punto.observaciones">
+            💡 {{ punto.observaciones }}
+          </div>
+        </div>
+
+        <button
+          class="btn-ir"
+          (click)="abrirMaps(punto); $event.stopPropagation()"
+          *ngIf="punto.estado !== 'cerrado'"
+        >
+          🗺️ Ir con GPS
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,159 @@
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="bg-circle c1"></div>
+      <div class="bg-circle c2"></div>
+      <div class="bg-circle c3"></div>
+      <div class="grid-lines"></div>
+    </div>
+    <div class="hero-content">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Municipalidad de Corrientes
+      </div>
+      <h1 class="hero-title">
+        Encontrá tu<br>
+        <span class="highlight">Punto Verde</span><br>
+        más cercano
+      </h1>
+      <p class="hero-subtitle">
+        Escaneá el QR desde cualquier plaza de Corrientes y te guiamos hasta el centro de reciclaje más próximo a vos.
+      </p>
+    </div>
+  </section>
+
+  <!-- Finder Card - Main action -->
+  <section class="finder-section">
+    <div class="finder-card">
+      
+      <!-- Loading State -->
+      <div class="finder-state loading" *ngIf="buscandoUbicacion">
+        <div class="pulse-rings">
+          <div class="ring r1"></div>
+          <div class="ring r2"></div>
+          <div class="ring r3"></div>
+          <div class="pin-icon">📍</div>
+        </div>
+        <h2>Detectando tu ubicación...</h2>
+        <p>Estamos buscando el punto verde más cercano a vos</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="finder-state error" *ngIf="!buscandoUbicacion && errorUbicacion">
+        <div class="error-icon">⚠️</div>
+        <h2>No pudimos obtener tu ubicación</h2>
+        <p>{{ errorUbicacion }}</p>
+        <div class="error-actions">
+          <button class="btn btn-primary" (click)="detectarUbicacion()">
+            🔄 Intentar nuevamente
+          </button>
+          <button class="btn btn-secondary" (click)="verTodosLosPuntos()">
+            🗺️ Ver todos los puntos
+          </button>
+        </div>
+      </div>
+
+      <!-- Result State -->
+      <div class="finder-state result" *ngIf="!buscandoUbicacion && puntoMasCercano && !errorUbicacion">
+        <div class="result-header">
+          <div class="result-badge">📍 Más cercano a vos</div>
+          <div class="distance-pill" *ngIf="puntoMasCercano.distancia">
+            {{ formatearDistancia(puntoMasCercano.distancia) }}
+          </div>
+        </div>
+        
+        <h2 class="punto-nombre">{{ puntoMasCercano.nombre }}</h2>
+        <p class="punto-direccion">📌 {{ puntoMasCercano.direccion }}</p>
+        
+        <div class="punto-meta">
+          <div class="meta-item">
+            <span class="meta-label">⏰ Horario</span>
+            <span class="meta-value">{{ puntoMasCercano.horario }}</span>
+          </div>
+          <div class="meta-item" *ngIf="puntoMasCercano.dias.length > 0">
+            <span class="meta-label">📅 Días</span>
+            <span class="meta-value">{{ puntoMasCercano.dias.join(', ') }}</span>
+          </div>
+        </div>
+
+        <div class="materiales-section">
+          <p class="materiales-label">Materiales aceptados:</p>
+          <div class="materiales-chips">
+            <span class="chip" *ngFor="let material of puntoMasCercano.materiales">
+              {{ getMaterialIcon(material) }} {{ material }}
+            </span>
+          </div>
+        </div>
+
+        <div class="observacion" *ngIf="puntoMasCercano.observaciones">
+          💡 {{ puntoMasCercano.observaciones }}
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary btn-large" (click)="irAlPuntoMasCercano()">
+            🗺️ Llevarme ahí con GPS
+          </button>
+          <button class="btn btn-secondary" (click)="verTodosLosPuntos()">
+            Ver todos los puntos
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="stat-card">
+      <div class="stat-number">9</div>
+      <div class="stat-label">Puntos Verdes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">8</div>
+      <div class="stat-label">Barrios cubiertos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Días de recolección</div>
+    </div>
+  </section>
+
+  <!-- Quick Info Section -->
+  <section class="quick-info">
+    <h2 class="section-title">¿Cómo funciona?</h2>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-icon">📱</div>
+        <div class="step-num">1</div>
+        <h3>Escaneá el QR</h3>
+        <p>Desde cualquier plaza de la ciudad, escaneá el código QR con tu celular</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">📍</div>
+        <div class="step-num">2</div>
+        <h3>Detectamos dónde estás</h3>
+        <p>La app usa tu GPS para encontrar el punto verde más cercano a tu posición actual</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🗺️</div>
+        <div class="step-num">3</div>
+        <h3>Te llevamos al mapa</h3>
+        <p>Con un toque, abrís el GPS con la ruta directa al centro de reciclaje</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">♻️</div>
+        <div class="step-num">4</div>
+        <h3>¡Reciclás!</h3>
+        <p>Depositás tus residuos correctamente y contribuís al cuidado del ambiente</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-logo">♻️ Corrientes Recicla</div>
+    <p>Municipalidad de Corrientes · Secretaría de Ambiente</p>
+    <p class="footer-copy">Corrientes, Argentina © 2025</p>
+  </footer>
+</div>

@@ -1,0 +1,113 @@
+<div class="info-page">
+  <div class="page-header">
+    <h1 class="page-title">♻️ ¿Qué puedo reciclar?</h1>
+    <p class="page-subtitle">Guía completa de materiales reciclables en Corrientes</p>
+  </div>
+
+  <!-- Category Selector -->
+  <div class="categoria-tabs">
+    <button
+      class="cat-tab"
+      *ngFor="let cat of categorias; let i = index"
+      [class.active]="i === categoriaActiva"
+      (click)="seleccionarCategoria(i)"
+      [style.--cat-color]="cat.color"
+    >
+      <span class="cat-emoji">{{ cat.emoji }}</span>
+      <span class="cat-name">{{ cat.nombre }}</span>
+    </button>
+  </div>
+
+  <!-- Active Category Detail -->
+  <div class="categoria-detail" *ngIf="categorias[categoriaActiva] as cat">
+    <div class="cat-title-row">
+      <span class="cat-big-emoji">{{ cat.emoji }}</span>
+      <h2 class="cat-title" [style.color]="cat.color">{{ cat.nombre }}</h2>
+    </div>
+
+    <div class="detail-columns">
+      <!-- Si se puede -->
+      <div class="detail-col puede">
+        <div class="col-header">
+          <span class="col-icon">✅</span>
+          <h3>Podés reciclar</h3>
+        </div>
+        <ul class="item-list">
+          <li *ngFor="let item of cat.puede">
+            <span class="item-dot si"></span>
+            {{ item }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- No se puede -->
+      <div class="detail-col no-puede">
+        <div class="col-header">
+          <span class="col-icon">🚫</span>
+          <h3>No va en este contenedor</h3>
+        </div>
+        <ul class="item-list">
+          <li *ngFor="let item of cat.noPuede">
+            <span class="item-dot no"></span>
+            {{ item }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="tips-section">
+      <div class="tips-header">💡 Consejos útiles</div>
+      <div class="tips-list">
+        <div class="tip-item" *ngFor="let tip of cat.tips">
+          <span class="tip-arrow">→</span>
+          {{ tip }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Regla de oro -->
+  <div class="golden-rule">
+    <div class="rule-icon">⭐</div>
+    <div>
+      <h3>La regla de oro del reciclaje</h3>
+      <p>
+        Los materiales deben estar <strong>limpios y secos</strong> para poder ser reciclados.
+        Un residuo contaminado puede arruinar todo un lote de material reciclable.
+        Cuando tengas dudas, <strong>¡enjuagá y secá!</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- Separación guía rápida -->
+  <div class="quick-guide">
+    <h2 class="section-title">Guía rápida de separación</h2>
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Enjuagá</strong> envases con un poco de agua
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Separás</strong> por tipo: papel, plástico, vidrio, metal
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Guardás</strong> en una bolsa o caja en casa
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <strong>Llevás</strong> al Punto Verde más cercano
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
