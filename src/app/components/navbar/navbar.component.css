@@ -11,7 +11,7 @@
   background: #ffffff;
   border-bottom: 1px solid var(--border);
   height: 64px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .navbar-brand {
@@ -32,7 +32,7 @@
 }
 
 .brand-title {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--verde-primario);
@@ -106,27 +106,42 @@
   transition: all 0.3s ease;
 }
 
+/* Animación del menú hamburguesa a "X" */
+.menu-toggle.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+.menu-toggle.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 @media (max-width: 768px) {
   .menu-toggle {
     display: flex;
   }
 
   .nav-links {
-    position: fixed;
-    top: 64px;
+    position: absolute;
+    top: 100%;
     left: 0;
     right: 0;
     flex-direction: column;
     background: #ffffff;
     padding: 0.75rem;
     gap: 0.25rem;
-    transform: translateY(-110%);
-    transition: transform 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
     border-bottom: 1px solid var(--border);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   }
 
   .nav-links.open {
+    opacity: 1;
+    visibility: visible;
     transform: translateY(0);
   }
 
